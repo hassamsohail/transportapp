@@ -26,6 +26,7 @@ const App = () => {
         <Stack.Screen name="TAB" component={TabNavigation} />
         <Stack.Screen name="GET_START" component={GetStart} />
         <Stack.Screen name="LOGIN" component={Login} />
+        <Stack.Screen name="Registartion" component={Registartion} />
         <Stack.Screen name="TASK" component={Task} />
         <Stack.Screen name="WORK_DAY" component={WorkDay} />
         <Stack.Screen name="NEW_PASSWORD" component={NewPassword} />
@@ -34,7 +35,6 @@ const App = () => {
         <Stack.Screen name="WELCOME_PAGE" component={WelcomePage} />
         <Stack.Screen name="TARCKING" component={Tarcking} />
         
-        <Stack.Screen name="Registartion" component={Registartion} />
 
       </Stack.Navigator>
     </NavigationContainer>

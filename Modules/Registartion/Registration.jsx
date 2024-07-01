@@ -6,18 +6,25 @@ import {
   Text,
   TextInput,
   View,
-  Alert
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
-import { LinearGradient } from 'react-native-gradients';
+import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../Components/Button';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
-const Registartion = () => {
+const Registration = () => {
   const [employeeID, setEmployeeID] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = () => {
@@ -31,15 +38,35 @@ const Registartion = () => {
       return;
     }
 
+    if (!fullName.trim()) {
+      Alert.alert("Validation Error", "Full Name is required.");
+      return;
+    }
+
+    if (!designation.trim()) {
+      Alert.alert("Validation Error", "Designation is required.");
+      return;
+    }
+
+    if (!email.trim()) {
+      Alert.alert("Validation Error", "Email is required.");
+      return;
+    }
+
+    setLoading(true);
+
     let data = JSON.stringify({
+      "fullName": fullName,
       "employeeID": employeeID,
-      "password": password
+      "designation": designation,
+      "password": password,
+      "email": email
     });
 
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://road-king.azurewebsites.net/api/auth/login',
+      url: 'https://road-king.azurewebsites.net/api/auth/register',
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -49,159 +76,208 @@ const Registartion = () => {
     axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        Alert.alert("Login Successful", "You have logged in successfully!");
-        navigation.navigate('NEW_PASSWORD'); // Change this to your desired screen
+        Alert.alert("Registration Successful", "You have registered successfully!");
+        navigation.navigate('LOGIN'); // Navigate to login screen after successful registration
       })
       .catch((error) => {
         console.log(error);
-        Alert.alert("Login Failed", "Please check your credentials and try again.");
+        Alert.alert("Registration Failed", "Failed to register. Please try again.");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   return (
-    <View style={{ height: '100%' }}>
-      <View style={{ width: '100%', height: height / 2.7 }}>
-        <LinearGradient colorList={[
-          { offset: '0%', color: '#F07F21', opacity: '1' },
-          { offset: '77.6%', color: '#FFB679', opacity: '1' }
-        ]} angle={260} />
-        <View
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{ height: height / 4, width: width / 2 }}
-            resizeMode="contain"
-            source={require('../../assets/images/logo2.png')}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          width: '100%',
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          backgroundColor: '#193A53',
-          height: height / 1.5,
-          position: 'absolute',
-          bottom: 0,
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            width: 80,
-            height: 80,
-            backgroundColor: 'white',
-            borderRadius: 100,
-            marginTop: -30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image source={require('../../assets/images/user1.png')} />
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-            paddingHorizontal: 15,
-            position: 'relative',
-            height: '100%',
-            width: '100%',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 30,
-              fontWeight: '800',
-              color: '#F07F21',
-              alignSelf: 'flex-start',
-              fontFamily: 'Poppins-Black',
-            }}>
-            Insert your received code
-          </Text>
-          <Text
-            style={{
-              fontSize: 12,
-              textTransform: 'capitalize',
-              fontWeight: '400',
-              color: '#356A81',
-              alignSelf: 'flex-start',
-              fontFamily: 'Poppins-Regular',
-            }}>
-            Please provide the given code in the box below to setup and load
-            your account
-          </Text>
-          <View style={{ width: '100%', marginTop: 10 }}>
-            <Text
-              style={{
-                fontSize: 20,
-                textTransform: 'capitalize',
-                fontWeight: '400',
-                color: 'white',
-                marginBottom: 5,
-              }}>
-              Insert user ID{' '}
-            </Text>
-            <TextInput
-              style={{
-                height: 50,
-                backgroundColor: 'white',
-                paddingHorizontal: 10,
-                borderRadius: 5,
-                fontSize: 18,
-              }}
-              placeholder="Enter your ID"
-              value={employeeID}
-              onChangeText={setEmployeeID}
-            />
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.scrollViewContent}
+    >
+      <View style={styles.container}>
+        <View style={styles.formContainer}>
+          <View style={styles.userIconContainer}>
+            <Image source={require('../../assets/images/user1.png')} />
           </View>
-          <View style={{ width: '100%', marginTop: 10 }}>
-            <Text
-              style={{
-                fontSize: 20,
-                textTransform: 'capitalize',
-                fontWeight: '400',
-                color: 'white',
-                marginBottom: 5,
-              }}>
-              Insert code{' '}
+          <View style={styles.form}>
+            <Text style={styles.headerText}>
+              Registration here!
             </Text>
-            <TextInput
-              secureTextEntry={true}
-              style={{
-                height: 50,
-                backgroundColor: 'white',
-                paddingHorizontal: 10,
-                borderRadius: 5,
-                fontSize: 18,
-              }}
-              placeholder="Insert code"
-              value={password}
-              onChangeText={setPassword}
-            />
-          </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 80,
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Button
-              text="Continue"
-              onPress={handleLogin}
-            />
+            <Text style={styles.subHeaderText}>
+              Please provide the given code in the box below to setup and load your account
+            </Text>
+          
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>
+                Full Name
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your full name"
+                value={fullName}
+                onChangeText={setFullName}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>
+                Insert user ID{' '}
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your ID"
+                value={employeeID}
+                onChangeText={setEmployeeID}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>
+                Designation
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your designation"
+                value={designation}
+                onChangeText={setDesignation}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>
+                Email
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>
+                Insert code{' '}
+              </Text>
+              <TextInput
+                secureTextEntry={true}
+                style={styles.input}
+                placeholder="Insert code"
+                value={password}
+                onChangeText={setPassword}
+              />
+            </View>
+
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                Already have an account?
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('LOGIN')}>
+                <Text style={styles.footerLink}>
+                  Login here
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonContainer}>
+              {loading ? (
+                <ActivityIndicator size="large" color="#F07F21" />
+              ) : (
+                <Button
+                  text="Continue"
+                  onPress={handleLogin}
+                />
+              )}
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
-export default Registartion;
+export default Registration;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    backgroundColor: '#193A53',
+  },
+  container: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#193A53',
+  },
+  formContainer: {
+    width: '100%',
+    borderTopLeftRadius: 20,
+    paddingTop:60,
+    borderTopRightRadius: 20,
+    backgroundColor: '#193A53',
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
+  userIconContainer: {
+    width: 80,
+    height: 80,
+    backgroundColor: 'white',
+    borderRadius: 100,
+    marginTop: -30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  form: {
+    marginTop: 10,
+    paddingHorizontal: 15,
+    width: '100%',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: '800',
+    color: '#F07F21',
+    alignSelf: 'flex-start',
+    fontFamily: 'Poppins-Black',
+  },
+  subHeaderText: {
+    fontSize: 12,
+    textTransform: 'capitalize',
+    fontWeight: '400',
+    color: '#356A81',
+    alignSelf: 'flex-start',
+    fontFamily: 'Poppins-Regular',
+  },
+  inputContainer: {
+    width: '100%',
+    marginTop: 10,
+  },
+  inputLabel: {
+    fontSize: 20,
+    textTransform: 'capitalize',
+    fontWeight: '400',
+    color: 'white',
+    marginBottom: 5,
+  },
+  input: {
+    height: 50,
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    fontSize: 18,
+  },
+  footer: {
+    marginTop: 20,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#356A81',
+    fontSize: 16,
+  },
+  footerLink: {
+    color: '#F07F21',
+    fontSize: 16,
+    marginLeft: 5,
+  },
+  buttonContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
