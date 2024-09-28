@@ -11,8 +11,7 @@ import Header from '../../Components/Header';
 import {COLOR} from '../../Constant/Color';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconF from 'react-native-vector-icons/FontAwesome6';
-import Pie from 'react-native-pie';
-import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 
 const Task = () => {
@@ -34,6 +33,18 @@ const Task = () => {
     {
       id: 4,
       name: 'Task 4',
+    },
+    {
+      id: 5,
+      name: 'Task 5',
+    },
+    {
+      id: 6,
+      name: 'Task 6',
+    },
+    {
+      id: 7,
+      name: 'Task 7',
     },
   ]);
   const onRemove = id => {
@@ -81,7 +92,7 @@ const Task = () => {
                   fontFamily: 'Poppins-SemiBold',
                   fontSize: 18,
                 }}>
-                #782128
+                Task 1
               </Text>
               <Text
                 style={{
@@ -106,7 +117,7 @@ const Task = () => {
           In Progress
         </Text>
         <TouchableOpacity onPress={()=>navigation.navigate("DRIVING_LOG",{type:"progress"})}>
-        <LinearGradient
+        {/* <LinearGradient
           colors={['#193A53', '#356A81']}
           style={{
             width: '100%',
@@ -138,8 +149,13 @@ const Task = () => {
               Completed
             </Text>
           </View>
-        </LinearGradient>
+        </LinearGradient> */}
+
+
+
         </TouchableOpacity>
+
+
         <View
           style={{
             marginTop: 10,
@@ -157,6 +173,7 @@ const Task = () => {
                     paddingHorizontal: 20,
                     alignItems: 'center',
                   }}>
+
                   <Text
                     style={{
                       fontSize: 18,
@@ -165,6 +182,16 @@ const Task = () => {
                     }}>
                     {item.name}
                   </Text>
+<View
+
+style={{
+  flexDirection:"row",
+  alignItems:"center"
+}}
+>
+
+
+                
                   {
                     <TouchableOpacity
                       onPress={() => {
@@ -200,6 +227,10 @@ const Task = () => {
                       )}
                     </TouchableOpacity>
                   }
+                  
+</View>
+
+
                 </View>
                 <View
                   style={{

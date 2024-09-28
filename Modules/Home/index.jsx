@@ -8,8 +8,7 @@ import {
   Modal,
 } from 'react-native';
 import React, {useState} from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-// import {LinearGradient} from 'react-native-gradients';
+import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../Components/Button';
@@ -131,7 +130,7 @@ const Home = () => {
                 M.Ashir
               </Text>
             </View>
-            <TouchableOpacity onPress={()=>navigation.navigate("TARCKING")}>
+            <TouchableOpacity onPress={()=>navigation.navigate("Tarcking")}>
               <Image source={require('../../assets/images/location.png')} />
             </TouchableOpacity>
           </View>

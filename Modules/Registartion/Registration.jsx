@@ -11,10 +11,11 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import Button from '../../Components/Button';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { BASE_URL } from '../../config';
 
 const { width, height } = Dimensions.get('window');
 
@@ -59,14 +60,17 @@ const Registration = () => {
       "fullName": fullName,
       "employeeID": employeeID,
       "designation": designation,
+      "email": email,
       "password": password,
-      "email": email
+     
     });
 
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://road-king.azurewebsites.net/api/auth/register',
+      // url: 'https://road-king.azurewebsites.net/api/auth/register',
+      url: `${BASE_URL}auth/register`, // Use the base URL and append the endpoint
+
       headers: { 
         'Content-Type': 'application/json'
       },
